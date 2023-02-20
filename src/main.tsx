@@ -15,11 +15,14 @@ const client = new ApolloClient({
 	cache: new InMemoryCache()
 });
 import { FiltersProvider } from './context/FiltersContext';
+import { StrictMode } from 'react';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<ApolloProvider client={client}>
 		<FiltersProvider>
-			<App />
+			<StrictMode>
+				<App />
+			</StrictMode>
 		</FiltersProvider>
 	</ApolloProvider>
 );

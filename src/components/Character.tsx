@@ -12,7 +12,6 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
 export const Character = ({ character }: Props) => {
-
 	return (
 		<CharacterContainer>
 			<CharacterPhoto src={character.image} alt={character.name} />
@@ -43,7 +42,6 @@ const CharacterPhoto = styled.img`
 	width: 100px;
 `;
 const CharacterContainer = styled.div`
-	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -78,13 +76,14 @@ const CharacterInfo = styled.div`
 	font-size: 14px;
 	color: #838991;
 	flex-grow: 1;
+	flex-shrink: 1;
 `;
 
 const CharacterStatus = styled.div`
 	padding: 4px;
 	border-radius: 3px;
 	border: 1px solid #9c9c9c;
-	width: fit-content;
+	max-width: 300px;
 	font-size: 12px;
 	${props => {
 		const { children } = props;
@@ -121,6 +120,7 @@ const DotSeparator = styled.div`
 
 const InlineInfo = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	gap: 4px;
 `;

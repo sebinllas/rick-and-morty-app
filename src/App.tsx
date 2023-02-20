@@ -5,10 +5,15 @@ import { useIntersectionObserver } from './hooks/useIntersectionObserver';
 import { CharacterList } from './components/CharacterList';
 import { FiltersContext } from './context/FiltersContext';
 import styled from 'styled-components';
+import { ListLayout } from './components/ListLayout';
+import { Filters } from './components/Filters';
+import { TbLoader } from 'react-icons/tb';
 
 function App() {
 	const { filters } = useContext(FiltersContext);
 	const { data, loading, error, fetchMore } = useQuery(CHARACTERS_QUERY, {
+		fetchPolicy: 'network-only',
+		notifyOnNetworkStatusChange: true,
 		variables: {
 			filter: filters
 		}
@@ -36,7 +41,7 @@ function App() {
 	};
 	const onObserve: IntersectionObserverCallback = (entries, observer) => {
 		if (entries[0].isIntersecting) {
-			page.current = page.current + 1;
+			page.current++;
 			fetchMore({
 				variables: { page: page.current + 1 },
 				updateQuery
@@ -46,27 +51,61 @@ function App() {
 
 	const { refCallback } = useIntersectionObserver(onObserve);
 
+	const ListLayoutContent = () => {
+		if ((loading && page.current <= 1) || !data) {
+			return (
+				<ListContent>
+					<Loading size={50} />
+				</ListContent>
+			);
+		}
+		if (error) {
+			return <ListContent>Error: {error.message}</ListContent>;
+		}
+		if (data.characters.results.length === 0) {
+			return (
+				<ListContent>Sorry , there are no results for your query </ListContent>
+			);
+		}
+		return <CharacterList characters={data ? data.characters.results : null} />;
+	};
+
 	return (
 		<MainContainer>
-			<div>
-				<Container>
-					{!loading && (
-						<CharacterList
-							characters={data.characters.results}
-							error={error}
-							loading={loading}
-						/>
-					)}
-				</Container>
-				<div ref={refCallback}>-</div>
+			<ListLayout
+				header={<Filters />}
+				footer={loading && page.current > 1 ? <Loading size={30} /> : null}>
+				<ListLayoutContent />
+			</ListLayout>
+			<div ref={refCallback} color='#0f172a'>
+				-
 			</div>
 		</MainContainer>
 	);
 }
 
-const Container = styled.div`
-	min-height: 100vh;
-	background-color: #0f172a;
+const Loading = styled(TbLoader)`
+	color: #ffffff;
+	font-size: 30px;
+	margin: 0 auto;
+	animation: spin 3s linear infinite;
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+`;
+
+const ListContent = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50vh;
+	padding: 15px;
+	border: 0;
 `;
 
 const MainContainer = styled.main`
@@ -75,6 +114,7 @@ const MainContainer = styled.main`
 	margin: 0;
 	font-family: 'Roboto', sans-serif;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 `;
 

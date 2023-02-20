@@ -12,20 +12,17 @@ export const ListLayout = ({ header, footer, children }: Props) => {
 		<List>
 			<ListHeader>{header}</ListHeader>
 			{children}
-			<ListFooter>{footer}</ListFooter>
+			{footer && <ListFooter>{footer}</ListFooter>}
 		</List>
 	);
 };
 
 const List = styled.div`
-	width: 520px;
-	display: grid;
-	grid-template-columns: 1fr;
+	display: flex;
+	flex-direction: column;
 	border-radius: 20px;
-	overflow: hidden;
 	margin: 20px;
 	border-top: 1px solid #465066;
-	width: max-content;
 	background-color: #1e293b;
 	padding-bottom: 20px;
 
@@ -36,8 +33,8 @@ const List = styled.div`
 
 const ListHeader = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	gap: 10px;
-	align-items: center;
 	padding: 15px;
 `;
 const ListFooter = styled(ListHeader)`

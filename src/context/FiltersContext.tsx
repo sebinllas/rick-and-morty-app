@@ -38,6 +38,7 @@ export const FiltersProvider = ({ children }: ProviderProps) => {
 		status: '',
 		gender: '',
 		species: '',
+		name: ''
 	});
 
 	return (
