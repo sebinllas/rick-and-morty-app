@@ -8,7 +8,7 @@ export const useIntersectionObserver = <T>(
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(onObserve, {
-			rootMargin: '200px'
+			rootMargin: '500px'
 		});
 		element && observer.observe(element as unknown as Element);
 		return () => {

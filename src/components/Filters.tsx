@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { FiltersContext, selectFiltersValues } from '../context/FiltersContext';
-import styled from 'styled-components';
-import { TbSearch } from 'react-icons/tb';
+import styled, { css } from 'styled-components';
+import { TbFilterOff, TbSearch } from 'react-icons/tb';
 
 export const Filters = () => {
 	const { filters, setFilters } = useContext(FiltersContext);
@@ -46,11 +46,27 @@ export const Filters = () => {
 					))}
 				</FilterInput>
 			))}
+			<ClearFiltersButton
+				as='button'
+				onClick={() =>
+					setFilters({
+						name: '',
+						...Object.keys(selectFiltersValues).reduce(
+							(acc, key) => ({ ...acc, [key]: '' }),
+							{}
+						)
+					})
+				}>
+				<TbFilterOff />
+			</ClearFiltersButton>
 		</>
 	);
 };
 
-const SearchForm = styled.form`
+const baseInputStyles = css`
+	height: 40px;
+	font-size: 14px;
+	font-weight: 500;
 	flex-grow: 1;
 	display: flex;
 	align-items: center;
@@ -61,6 +77,27 @@ const SearchForm = styled.form`
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: 500;
+	cursor: pointer;
+	overflow: hidden;
+	transition: all 0.2s ease-in-out;
+	&:hover {
+		background-color: #3f4653;
+	}
+
+	&:active {
+		background-color: #b4b4b4;
+		color: #000000;
+	}
+`;
+
+const baseButtonStyles = css`
+	flex-grow: 0;
+	padding: 0 15px;
+`;
+
+const SearchForm = styled.form`
+	${baseInputStyles}
+	align-items: stretch;
 `;
 
 const SearchInput = styled.input`
@@ -71,39 +108,27 @@ const SearchInput = styled.input`
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: 500;
+	&:active &:focus-visible {
+		background-color: #b4b4b4;
+		color: #000000;
+		outline: none;
+	}
 `;
 
 const SearchButton = styled.button`
-	flex-grow: 0;
-	padding: 10px;
-	border: 0;
-	background-color: transparent;
-	color: #ffffff;
-	font-size: 14px;
-	font-weight: 500;
+	${baseInputStyles}
+	${baseButtonStyles}
+	border: none;
+	border-radius: 0;
 	border-left: 1px solid #465066;
 `;
 
 const FilterInput = styled.div`
-	flex-grow: 1;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border: 1px solid #465066;
-	background-color: transparent;
-	border-radius: 10px;
-	color: #ffffff;
+	${baseInputStyles}
 	padding: 10px 0px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: all 0.2s ease-in-out;
-	&:hover {
-		background-color: #3f4653;
-	}
+`;
 
-	&:active {
-		background-color: #b4b4b4;
-		color: #000000;
-	}
+const ClearFiltersButton = styled.button`
+	${baseInputStyles}
+	${baseButtonStyles}
 `;

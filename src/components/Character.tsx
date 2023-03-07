@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { TbMapPin } from 'react-icons/tb';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { useModal } from '../hooks/useModal';
 
 interface Props {
 	character: CharacterType;
@@ -12,28 +13,42 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
 export const Character = ({ character }: Props) => {
+	const { openModal } = useModal();
 	return (
-		<CharacterContainer>
-			<CharacterPhoto src={character.image} alt={character.name} />
-			<CharacterInfo>
-				<CharacterName>{character.name}</CharacterName>
-				<CharacterSpecie>{character.species}</CharacterSpecie>
-				<InlineInfo>
-					<CharacterStatus>{character.status}</CharacterStatus>
-					<DotSeparator />
-					<div>{character.gender}</div>
-					<DotSeparator />
-					<div>
-						{character.created && timeAgo.format(Date.parse(character.created))}
-					</div>
-				</InlineInfo>
-				<CharacterLocation>
-					<TbMapPin /> {character.location.name}
-					{' | '}
-					{character.location.dimension}
-				</CharacterLocation>
-			</CharacterInfo>
-		</CharacterContainer>
+		<>
+			<CharacterContainer>
+				<CharacterPhoto
+					src={character.image}
+					alt={character.name}
+					onClick={() =>
+						openModal(
+							<ModalContent>
+								<img src={character.image} alt={character.name} />
+							</ModalContent>
+						)
+					}
+				/>
+				<CharacterInfo>
+					<CharacterName>{character.name}</CharacterName>
+					<CharacterSpecie>{character.species}</CharacterSpecie>
+					<InlineInfo>
+						<CharacterStatus>{character.status}</CharacterStatus>
+						<DotSeparator />
+						<div>{character.gender}</div>
+						<DotSeparator />
+						<div>
+							{character.created &&
+								timeAgo.format(Date.parse(character.created))}
+						</div>
+					</InlineInfo>
+					<CharacterLocation>
+						<TbMapPin /> {character.location.name}
+						{' | '}
+						{character.location.dimension}
+					</CharacterLocation>
+				</CharacterInfo>
+			</CharacterContainer>
+		</>
 	);
 };
 
@@ -123,4 +138,11 @@ const InlineInfo = styled.div`
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 4px;
+`;
+
+const ModalContent = styled.div`
+	img {
+		width: 100%;
+		border-radius: 100%;
+	}
 `;

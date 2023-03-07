@@ -16,13 +16,18 @@ const client = new ApolloClient({
 });
 import { FiltersProvider } from './context/FiltersContext';
 import { StrictMode } from 'react';
+import { ModalProvider } from './context/ModalContext';
+import { Modal } from './components/Modal';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<ApolloProvider client={client}>
-		<FiltersProvider>
-			<StrictMode>
-				<App />
-			</StrictMode>
-		</FiltersProvider>
+		<ModalProvider>
+			<FiltersProvider>
+				<StrictMode>
+					<App />
+					<Modal />
+				</StrictMode>
+			</FiltersProvider>
+		</ModalProvider>
 	</ApolloProvider>
 );

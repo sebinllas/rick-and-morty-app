@@ -33,8 +33,8 @@ function App() {
 			characters: {
 				...prev.characters,
 				results: [
-					...prev.characters.results,
-					...fetchMoreResult.characters.results
+					...prev.characters?.results,
+					...fetchMoreResult.characters?.results
 				]
 			}
 		});
