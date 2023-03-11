@@ -2,35 +2,27 @@ import { useContext } from 'react';
 import { FiltersContext, selectFiltersValues } from '../context/FiltersContext';
 import styled, { css } from 'styled-components';
 import { TbFilterOff, TbSearch } from 'react-icons/tb';
+import { DebounceInput } from 'react-debounce-input';
 
 export const Filters = () => {
 	const { filters, setFilters } = useContext(FiltersContext);
 
 	const handleSelectChange = (
 		e: React.ChangeEvent<HTMLSelectElement>,
-		porperty: string
+		property: string
 	) => {
-		setFilters({ ...filters, [porperty]: e.target.value });
+		setFilters({ ...filters, [property]: e.target.value });
 	};
 
 	return (
 		<>
-			<SearchForm
-				onSubmit={e => {
-					e.preventDefault();
-					const data = new FormData(e.currentTarget);
-					setFilters({ ...filters, name: data.get('name') as string });
-				}}>
-				<SearchInput
-					name='name'
-					id='name'
-					type='text'
-					placeholder='Search by name'
-				/>
-				<SearchButton type='submit'>
-					<TbSearch />
-				</SearchButton>
-			</SearchForm>
+			<SearchInput
+				debounceTimeout={600}
+				onChange={e => setFilters({ ...filters, name: e.target.value })}
+				type='text'
+				placeholder='Search by name'
+				value={filters.name}
+			/>
 			{Object.keys(selectFiltersValues).map(key => (
 				<FilterInput
 					as={'select'}
@@ -77,7 +69,6 @@ const baseInputStyles = css`
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: 500;
-	cursor: pointer;
 	overflow: hidden;
 	transition: all 0.2s ease-in-out;
 	&:hover {
@@ -95,13 +86,8 @@ const baseButtonStyles = css`
 	padding: 0 15px;
 `;
 
-const SearchForm = styled.form`
-	${baseInputStyles}
-	align-items: stretch;
-`;
-
-const SearchInput = styled.input`
-	padding: 10px;
+const SearchInput = styled(DebounceInput)`
+	/* padding: 10px;
 	flex-grow: 1;
 	border: 0;
 	background-color: transparent;
@@ -112,15 +98,8 @@ const SearchInput = styled.input`
 		background-color: #b4b4b4;
 		color: #000000;
 		outline: none;
-	}
-`;
-
-const SearchButton = styled.button`
+	} */
 	${baseInputStyles}
-	${baseButtonStyles}
-	border: none;
-	border-radius: 0;
-	border-left: 1px solid #465066;
 `;
 
 const FilterInput = styled.div`

@@ -15,46 +15,44 @@ const timeAgo = new TimeAgo('en-US');
 export const Character = ({ character }: Props) => {
 	const { openModal } = useModal();
 	return (
-		<>
-			<CharacterContainer>
-				<CharacterPhoto
-					src={character.image}
-					alt={character.name}
-					onClick={() =>
-						openModal(
-							<ModalContent>
-								<img src={character.image} alt={character.name} />
-							</ModalContent>
-						)
-					}
-				/>
-				<CharacterInfo>
-					<CharacterName>{character.name}</CharacterName>
-					<CharacterSpecie>{character.species}</CharacterSpecie>
-					<InlineInfo>
-						<CharacterStatus>{character.status}</CharacterStatus>
-						<DotSeparator />
-						<div>{character.gender}</div>
-						<DotSeparator />
-						<div>
-							{character.created &&
-								timeAgo.format(Date.parse(character.created))}
-						</div>
-					</InlineInfo>
-					<CharacterLocation>
-						<TbMapPin /> {character.location.name}
-						{' | '}
-						{character.location.dimension}
-					</CharacterLocation>
-				</CharacterInfo>
-			</CharacterContainer>
-		</>
+		<CharacterContainer>
+			<CharacterPhoto
+				src={character.image}
+				alt={character.name}
+				onClick={() =>
+					openModal(
+						<ModalContent>
+							<img src={character.image} alt={character.name} />
+						</ModalContent>
+					)
+				}
+			/>
+			<CharacterInfo>
+				<CharacterName>{character.name}</CharacterName>
+				<CharacterSpecie>{character.species}</CharacterSpecie>
+				<InlineInfo>
+					<CharacterStatus>{character.status}</CharacterStatus>
+					<DotSeparator />
+					<div>{character.gender}</div>
+					<DotSeparator />
+					<div>
+						{character.created && timeAgo.format(Date.parse(character.created))}
+					</div>
+				</InlineInfo>
+				<CharacterLocation>
+					<TbMapPin /> {character.location.name}
+					{' | '}
+					{character.location.dimension}
+				</CharacterLocation>
+			</CharacterInfo>
+		</CharacterContainer>
 	);
 };
 
 const CharacterPhoto = styled.img`
 	border-radius: 100%;
 	width: 100px;
+	cursor: zoom-in;
 `;
 const CharacterContainer = styled.div`
 	display: flex;

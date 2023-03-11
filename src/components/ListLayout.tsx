@@ -22,6 +22,9 @@ const List = styled.div`
 	flex-direction: column;
 	border-radius: 20px;
 	margin: 20px;
+	@media (max-width: 560px) {
+		margin: 0;
+	}
 	border-top: 1px solid #465066;
 	background-color: #1e293b;
 	padding-bottom: 20px;
