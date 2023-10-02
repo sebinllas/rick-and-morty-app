@@ -1,16 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Index = () => {
 	return (
 		<IndexContainer>
-			<Image src='logo.webp' alt='Rick and Morty logo'/>
+			<Image src='logo.webp' alt='Rick and Morty logo' />
 			<PortalImage src='portal.webp' alt='portal' />
 			<ButtonsContainer>
-				<RickAndMortyText as='a' fontSize={2} href='/characters'>
+				<RickAndMortyText as={Link} fontSize={2} to='/characters'>
 					Characters
 				</RickAndMortyText>
-				<RickAndMortyText as='a' fontSize={2} href='/episodes'>
+				<RickAndMortyText as={Link} fontSize={2} to='/episodes'>
 					Episodes
 				</RickAndMortyText>
 			</ButtonsContainer>
@@ -37,12 +38,11 @@ const Image = styled.img`
 	width: 400px;
 	max-width: 90vw;
 	object-fit: cover;
-	
 `;
 
 const PortalImage = styled(Image)`
-  margin-top: -120px;
-  margin-bottom: -60px;
+	margin-top: -120px;
+	margin-bottom: -60px;
 `;
 
 interface RickAndMortyTextProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -57,8 +57,7 @@ const RickAndMortyText = styled.span<RickAndMortyTextProps>`
 	flex-grow: 1;
 	@font-face {
 		font-family: 'Get Schwifty';
-		src: url('/font/getschwifty-webfont.woff')
-			format('woff');
+		src: url('/font/getschwifty-webfont.woff') format('woff');
 	}
 	text-align: center;
 	font-family: 'Get Schwifty';
