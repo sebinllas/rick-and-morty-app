@@ -11,6 +11,7 @@ import { Modal } from './components/Modal';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Episodes } from './pages/Episodes';
 import styled from 'styled-components';
+import { Index } from './pages/Index';
 
 const client = new ApolloClient({
 	connectToDevTools: true,
@@ -31,6 +32,7 @@ function App() {
 							<Routes>
 								<Route path='/characters' element={<Characters />} />
 								<Route path='/episodes' element={<Episodes />} />
+								<Route path='/' element={<Index />} />
 							</Routes>
 						</Main>
 					</BrowserRouter>

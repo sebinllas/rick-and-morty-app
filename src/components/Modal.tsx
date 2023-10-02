@@ -41,7 +41,6 @@ const Overlay = styled.div`
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.5) !important;
-	backdrop-filter: blur(5px);import { selectFiltersValues } from '../context/FiltersContext';
-
+	backdrop-filter: blur(5px);
 	z-index: 1000;
 `;
