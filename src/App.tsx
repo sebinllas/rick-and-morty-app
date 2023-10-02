@@ -8,8 +8,9 @@ import {
 import { FiltersProvider } from './context/FiltersContext';
 import { ModalProvider } from './context/ModalContext';
 import { Modal } from './components/Modal';
-import { useRoutes, BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Episodes } from './pages/Episodes';
+import styled from 'styled-components';
 
 const client = new ApolloClient({
 	connectToDevTools: true,
@@ -26,15 +27,30 @@ function App() {
 				<ModalProvider>
 					<Modal />
 					<BrowserRouter>
-						<Routes>
-							<Route path='/characters' element={<Characters />} />
-							<Route path='/episodes' element={<Episodes />} />
-						</Routes>
+						<Main>
+							<Routes>
+								<Route path='/characters' element={<Characters />} />
+								<Route path='/episodes' element={<Episodes />} />
+							</Routes>
+						</Main>
 					</BrowserRouter>
 				</ModalProvider>
 			</FiltersProvider>
 		</ApolloProvider>
 	);
 }
+
+const Main = styled.main`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+
+	& > * {
+		flex-grow: 1;
+	}
+
+`;
 
 export default App;

@@ -15,10 +15,12 @@ export const Filters = () => {
 	};
 
 	return (
-		<>
+		<FiltersContainer>
 			<SearchInput
 				debounceTimeout={600}
-				onChange={e => setFilters({ ...filters, name: e.target.value })}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+					setFilters({ ...filters, name: e.target.value });
+				}}
 				type='text'
 				placeholder='Search by name'
 				value={filters.name}
@@ -46,14 +48,23 @@ export const Filters = () => {
 						...Object.keys(selectFiltersValues).reduce(
 							(acc, key) => ({ ...acc, [key]: '' }),
 							{}
-						)
+						),
 					})
 				}>
 				<TbFilterOff />
 			</ClearFiltersButton>
-		</>
+		</FiltersContainer>
 	);
 };
+
+const FiltersContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 15px;
+	border-bottom: 1px solid #465066;
+`;
 
 const baseInputStyles = css`
 	height: 40px;
@@ -87,24 +98,13 @@ const baseButtonStyles = css`
 `;
 
 const SearchInput = styled(DebounceInput)`
-	/* padding: 10px;
-	flex-grow: 1;
-	border: 0;
-	background-color: transparent;
-	color: #ffffff;
-	font-size: 14px;
-	font-weight: 500;
-	&:active &:focus-visible {
-		background-color: #b4b4b4;
-		color: #000000;
-		outline: none;
-	} */
 	${baseInputStyles}
+	padding-left: 10px;
 `;
 
 const FilterInput = styled.div`
 	${baseInputStyles}
-	padding: 10px 0px;
+	padding: 10px;
 `;
 
 const ClearFiltersButton = styled.button`

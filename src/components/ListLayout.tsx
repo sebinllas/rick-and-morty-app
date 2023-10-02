@@ -10,28 +10,16 @@ interface Props {
 export const ListLayout = ({ header, footer, children }: Props) => {
 	return (
 		<List>
-			<ListHeader>{header}</ListHeader>
+			{header}
 			{children}
-			{footer && <ListFooter>{footer}</ListFooter>}
+			{footer}
 		</List>
 	);
 };
 
 const List = styled.div`
-	display: flex;
-	flex-direction: column;
 	border-radius: 20px;
-	margin: 20px;
-	@media (max-width: 560px) {
-		margin: 0;
-	}
-	border-top: 1px solid #465066;
-	background-color: #1e293b;
-	padding-bottom: 20px;
-
-	& > div {
-		border-bottom: 1px solid #465066;
-	}
+	border: 1px solid #465066;
 `;
 
 const ListHeader = styled.div`

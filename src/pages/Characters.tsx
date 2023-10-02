@@ -4,10 +4,10 @@ import { CHARACTERS_QUERY } from '../graphql/queries/getCharacters';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { CharacterList } from '../components/CharacterList';
 import { FiltersContext } from '../context/FiltersContext';
-import styled from 'styled-components';
-import { ListLayout } from '../components/ListLayout';
-import { Filters } from '../components/Filters';
 import { Loading } from '../components/Loading';
+import { Filters } from '../components/Filters';
+import { MainContainer } from '../components/styled/MainContainer';
+import { ListLayoutContent } from '../components/styled/ListLayoutContent';
 
 export const Characters = () => {
 	const { filters } = useContext(FiltersContext);
@@ -15,8 +15,8 @@ export const Characters = () => {
 		fetchPolicy: 'network-only',
 		notifyOnNetworkStatusChange: true,
 		variables: {
-			filter: filters
-		}
+			filter: filters,
+		},
 	});
 	const page = useRef(0);
 
@@ -34,9 +34,9 @@ export const Characters = () => {
 				...prev.characters,
 				results: [
 					...prev.characters?.results,
-					...fetchMoreResult.characters?.results
-				]
-			}
+					...fetchMoreResult.characters?.results,
+				],
+			},
 		});
 	};
 	const onObserve: IntersectionObserverCallback = (entries, _) => {
@@ -44,27 +44,29 @@ export const Characters = () => {
 			page.current++;
 			fetchMore({
 				variables: { page: page.current + 1 },
-				updateQuery
+				updateQuery,
 			});
 		}
 	};
 
 	const { refCallback } = useIntersectionObserver(onObserve);
 
-	const ListLayoutContent = () => {
+	const content = () => {
 		if ((loading && page.current <= 1) || !data) {
 			return (
-				<ListContent>
+				<ListLayoutContent>
 					<Loading size={50} />
-				</ListContent>
+				</ListLayoutContent>
 			);
 		}
 		if (error) {
-			return <ListContent>Error: {error.message}</ListContent>;
+			return <ListLayoutContent>Error: {error.message}</ListLayoutContent>;
 		}
 		if (data.characters.results.length === 0) {
 			return (
-				<ListContent>Sorry , there are no results for your query </ListContent>
+				<ListLayoutContent>
+					Sorry , there are no results for your query{' '}
+				</ListLayoutContent>
 			);
 		}
 		return <CharacterList characters={data ? data.characters.results : null} />;
@@ -72,31 +74,12 @@ export const Characters = () => {
 
 	return (
 		<MainContainer>
-			<ListLayout
-				header={<Filters />}
-				footer={loading && page.current > 1 ? <Loading size={30} /> : null}>
-				<ListLayoutContent />
-			</ListLayout>
+			<Filters />
+			{loading && page.current > 1 ? <Loading size={30} /> : null}
+			{content()}
 			<div ref={refCallback} style={{ color: '#0f172a' }}>
 				-
 			</div>
 		</MainContainer>
 	);
 };
-
-const ListContent = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 50vh;
-	padding: 15px;
-	border: 0;
-`;
-
-const MainContainer = styled.main`
-	background-color: #0f172a;
-	margin: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-`;

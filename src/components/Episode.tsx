@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { TbPlus } from 'react-icons/tb';
 import styled from 'styled-components';
-import { useModal } from '../hooks/useModal';
 import { useNavigate } from 'react-router-dom';
 import { FiltersContext } from '../context/FiltersContext';
 
@@ -45,8 +44,7 @@ export const Episode = ({ episode }: Props) => {
 					/>
 				))}
 				{episode.characters.length - characters.length !== 0 && (
-					<CharacterImage
-						as={'span'}
+					<LoadMoreCharacters
 						onClick={() =>
 							setCharacters(
 								episode.characters.slice(
@@ -57,12 +55,22 @@ export const Episode = ({ episode }: Props) => {
 						}>
 						<TbPlus />
 						{episode.characters.length - characters.length}
-					</CharacterImage>
+					</LoadMoreCharacters>
 				)}
 			</ImagesContainer>
 		</EpisodeCard>
 	);
 };
+ 
+const LoadMoreCharacters = styled.button`
+	width: 70px;
+	height: 70px;
+	border-radius: 100%;
+	flex-shrink: 0;
+	background-color: #1e293b;
+	color: #fff;
+	border: 2px solid #fff;
+`;
 
 const CharacterImage = styled.img`
 	border-radius: 100%;
@@ -86,10 +94,11 @@ const CharacterImage = styled.img`
 
 const ImagesContainer = styled.div`
 	display: flex;
+	padding: 10px;
+	max-width: 100%;
 	align-items: center;
 	position: relative;
 	overflow-x: scroll;
-	overflow-y: hidden;
 	::-webkit-scrollbar {
 		height: 7px;
 	}
@@ -106,10 +115,13 @@ const ImagesContainer = styled.div`
 const EpisodeCard = styled.div`
 	display: flex;
 	flex-direction: column;
-	background-color: #1e293b;
 	padding: 20px;
-	box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-	width: 100%;
+	border: 1px solid #465066;
+	border-radius: 20px;
+	max-width: 100%;
+	@media (min-width: 800px) {
+		width: 800px;
+	}
 `;
 
 const EpisodeTitle = styled.h4`

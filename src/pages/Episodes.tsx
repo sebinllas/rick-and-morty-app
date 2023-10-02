@@ -2,31 +2,32 @@ import styled from 'styled-components';
 import { EPISODES_QUERY } from '../graphql/queries/getEpisodes';
 import { useQuery } from '@apollo/client';
 import { Episode } from '../components/Episode';
-import { ListLayout } from '../components/ListLayout';
 import { useRef } from 'react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { Loading } from '../components/Loading';
+import { MainContainer } from '../components/styled/MainContainer';
 
 export const Episodes = () => {
 	const { data, loading, error, fetchMore } = useQuery(EPISODES_QUERY, {
 		fetchPolicy: 'network-only',
-		notifyOnNetworkStatusChange: true
+		notifyOnNetworkStatusChange: true,
 	});
 	const page = useRef(0);
 
 	const updateQuery = (prev: any, { fetchMoreResult }: any) => {
-		if (!fetchMoreResult) {
+		if (!fetchMoreResult || fetchMoreResult === prev) {
+			page.current--;
 			return prev;
 		}
 
 		return Object.assign({}, prev, {
-			characters: {
-				...prev.characters,
+			episodes: {
+				...prev.episodes,
 				results: [
-					...prev.characters?.results,
-					...fetchMoreResult.characters?.results
-				]
-			}
+					...prev.episodes?.results,
+					...fetchMoreResult.episodes?.results,
+				],
+			},
 		});
 	};
 	const onObserve: IntersectionObserverCallback = (entries, _) => {
@@ -34,83 +35,71 @@ export const Episodes = () => {
 			page.current++;
 			fetchMore({
 				variables: { page: page.current + 1 },
-				updateQuery
+				updateQuery,
 			});
 		}
 	};
 
-	const ListLayoutContent = () => {
+	const content = () => {
 		if ((loading && page.current <= 1) || !data) {
 			return (
-				<ListContent>
+				<ContentContainer>
 					<Loading size={50} />
-				</ListContent>
+				</ContentContainer>
 			);
 		}
 		if (error) {
-			return <ListContent>Error: {error.message}</ListContent>;
+			return <ContentContainer>Error: {error.message}</ContentContainer>;
 		}
 		if (data.episodes.results.length === 0) {
 			return (
-				<ListContent>Sorry , there are no results for your query </ListContent>
+				<ContentContainer>
+					Sorry , there are no results for your query{' '}
+				</ContentContainer>
 			);
 		}
 		return (
-			<>
+			<EpisodesList>
 				{data.episodes.results.map((episode: any) => (
 					<Episode key={episode.id} episode={episode} />
 				))}
-			</>
+			</EpisodesList>
 		);
 	};
 
 	const { refCallback } = useIntersectionObserver(onObserve);
 	return (
-		<MainContainer>
-			<ListLayout
-				footer={loading && page.current > 1 ? <Loading size={30} /> : null}>
-				<ListLayoutContent />
-			</ListLayout>
+		<>
+			{loading && page.current > 1 ? <Loading size={30} /> : null}
+			{content()}
 			<div ref={refCallback} style={{ color: '#0f172a' }}>
 				-
 			</div>
-		</MainContainer>
+		</>
 	);
 };
 
-// 	return (
-// 		<>
-// 			<ListLayout>
-// 				<>
-// 					{loading && <Loading size={50} />}
-// 					{error && <div>{error.message}</div>}
-// 					{data && (
-// 						<>
-// 							{data.episodes.results.map((episode: any) => (
-// 								<Episode key={episode.id} episode={episode} />
-// 							))}
-// 						</>
-// 					)}
-// 				</>
-// 			</ListLayout>
-// 			<div ref={refCallback}> - </div>
-// 		</>
-// 	);
-// };
 
-const ListContent = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 50vh;
-	padding: 15px;
-	border: 0;
-`;
-
-const MainContainer = styled.main`
-	background-color: #0f172a;
-	margin: 0;
+const ContentContainer = styled(MainContainer)`
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	justify-content: center;
+	min-height: 300px;
+	width: 80vw;
+	@media (min-width: 800px) {
+		min-width: 800px;
+	}
+`;
+
+const EpisodesList = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding-top: 20px;
+	@media (min-width: 800px) {
+		max-width: 800px;
+	}
 `;
